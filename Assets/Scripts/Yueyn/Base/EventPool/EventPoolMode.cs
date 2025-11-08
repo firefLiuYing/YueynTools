@@ -1,6 +1,6 @@
 ﻿namespace Yueyn.Base.EventPool
 {
-    internal enum EventPoolMode:byte
+    public enum EventPoolMode:byte
     {
         /// <summary>
         /// 默认事件池模式，即必须存在有且仅有一个事件处理函数
