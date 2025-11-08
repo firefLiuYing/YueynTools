@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 
 namespace Yueyn.Utils
 {
-    public sealed class MultiDictionary<TKey, TValue>:IEnumerable<KeyValuePair<TKey,List<TValue>>>,IEnumerable
+    public sealed class MultiDictionary<TKey, TValue>:IEnumerable<KeyValuePair<TKey,LinkedList<TValue>>>,IEnumerable
     {
-        private readonly List<TValue> _list = new();
-        private readonly Dictionary<TKey,List<TValue>> _dict = new();
-        public List<TValue> this[TKey key]=>_dict[key];
+        private readonly LinkedList<TValue> _list;
+        private readonly Dictionary<TKey,LinkedList<TValue>> _dict = new();
+        public LinkedList<TValue> this[TKey key]=>_dict[key];
 
         public void Clear()
         {
@@ -17,17 +17,19 @@ namespace Yueyn.Utils
         }
         public bool Contains(TKey key)=>_dict.ContainsKey(key);
         public bool Contains(TKey key,TValue value)=>_dict.ContainsKey(key)&&_dict[key].Contains(value);
-        public bool TryGetValue(TKey key,out List<TValue> value)=>_dict.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key,out LinkedList<TValue> value)=>_dict.TryGetValue(key, out value);
 
         public void Add(TKey key, TValue value)
         {
+            var node = new LinkedListNode<TValue>(value);
             if (_dict.TryGetValue(key, out var list))
             {
-                list.Add(value);
+                list.AddLast(node);
             }
             else
             {
-                list=new List<TValue> { value };
+                list = new LinkedList<TValue>();
+                list.AddLast(node);
                 _dict.Add(key,list);
             }
         }
@@ -53,17 +55,17 @@ namespace Yueyn.Utils
         public Enumerator GetEnumerator()=>new Enumerator(_dict);
 
 
-        IEnumerator<KeyValuePair<TKey, List<TValue>>> IEnumerable<KeyValuePair<TKey, List<TValue>>>.GetEnumerator()
+        IEnumerator<KeyValuePair<TKey, LinkedList<TValue>>> IEnumerable<KeyValuePair<TKey, LinkedList<TValue>>>.GetEnumerator()
             => GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         [StructLayout(LayoutKind.Auto)]
-        public struct Enumerator : IEnumerator<KeyValuePair<TKey, List<TValue>>>, IEnumerator
+        public struct Enumerator : IEnumerator<KeyValuePair<TKey, LinkedList<TValue>>>, IEnumerator
         {
-            private Dictionary<TKey, List<TValue>>.Enumerator _enumerator;
+            private Dictionary<TKey, LinkedList<TValue>>.Enumerator _enumerator;
 
-            internal Enumerator(Dictionary<TKey, List<TValue>> dict)
+            internal Enumerator(Dictionary<TKey, LinkedList<TValue>> dict)
             {
                 if (dict == null)
                 {
@@ -71,13 +73,13 @@ namespace Yueyn.Utils
                 }
                 _enumerator = dict.GetEnumerator();
             }
-            public KeyValuePair<TKey, List<TValue>> Current => _enumerator.Current;
+            public KeyValuePair<TKey, LinkedList<TValue>> Current => _enumerator.Current;
             public bool MoveNext()
             {
                 return _enumerator.MoveNext();
             }
 
-            public void Reset()=>((IEnumerator<KeyValuePair<TKey, List<TValue>>>)_enumerator).Reset();
+            public void Reset()=>((IEnumerator<KeyValuePair<TKey, LinkedList<TValue>>>)_enumerator).Reset();
 
 
             object IEnumerator.Current => _enumerator.Current;

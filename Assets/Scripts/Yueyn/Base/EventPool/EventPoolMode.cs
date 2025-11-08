@@ -1,5 +1,8 @@
-﻿namespace Yueyn.Base.EventPool
+﻿using System;
+
+namespace Yueyn.Base.EventPool
 {
+    [Flags]
     public enum EventPoolMode:byte
     {
         /// <summary>
