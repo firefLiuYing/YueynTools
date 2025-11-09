@@ -26,3 +26,8 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 /Assets/Scripts/TestScripts/
+/Assets/AssetBundle/
+/Assets/Character
+/Assets/Configs
+/Assets/LP_SciFiWeapons_Lite
+/Assets/StreamingAssets
