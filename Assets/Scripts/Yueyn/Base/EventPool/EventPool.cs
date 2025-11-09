@@ -18,6 +18,8 @@ namespace Yueyn.Base.EventPool
         {
             _eventHandlers = new();
             _events = new();
+            _cachedNodes = new();
+            _tempNodes = new();
             _eventPoolMode = mode;
             _defaultHandler = null;
         }
@@ -152,6 +154,7 @@ namespace Yueyn.Base.EventPool
             }
             HandleEvent(sender,e);
         }
+        public void SetDefaultHandler(EventHandler<T> handler)=> _defaultHandler = handler;
         private void HandleEvent(object sender, T e)
         {
             bool noHandlerException = false;

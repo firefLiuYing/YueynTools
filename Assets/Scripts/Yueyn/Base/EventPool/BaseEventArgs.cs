@@ -1,8 +1,9 @@
-﻿using Yueyn.Base.ReferencePool;
+﻿using System;
+using Yueyn.Base.ReferencePool;
 
 namespace Yueyn.Base.EventPool
 {
-    public abstract class BaseEventArgs:IReference
+    public abstract class BaseEventArgs:EventArgs,IReference
     {
         public BaseEventArgs()
         {
